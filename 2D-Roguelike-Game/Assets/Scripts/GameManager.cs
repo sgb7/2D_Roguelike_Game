@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+//Stopped at Writing the Game Manager, 5:55 -- did not make GameObject a prefab yet
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
