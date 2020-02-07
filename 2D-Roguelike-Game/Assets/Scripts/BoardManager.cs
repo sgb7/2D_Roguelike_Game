@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using System;
-using System.Collections.Generic;         //Allows us to use Lists.
 using Random = UnityEngine.Random;         //Tells Random to use the Unity Engine random number generator.
 
 namespace Completed
