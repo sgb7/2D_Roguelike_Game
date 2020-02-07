@@ -1,18 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Completed;
 
 public class GameManager : MonoBehaviour
 {
+    public float levelStartDelay = 2f;
     public float turnDelay = .1f;
-    public static GameManager instance = null;                //Static instance of GameManager which allows it to be accessed by any other script.
+    public static GameManager instance = null;
     private BoardManager boardScript;
     public int playerFoodPoints = 100;
     [HideInInspector] public bool playersTurn = true;
-    private int level = 3;
+    private Text levelText;
+    private GameObject levelImage;
+    private int level = 1;
     private List<Enemy> enemies;
     private bool enemiesMoving;
+    private bool doingSetup;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -41,24 +46,48 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
+    private void OnLevelWasLoaded(int index)
+    {
+        level++;
+
+        InitGame();
+    }
+
     //Initializes the game for each level.
     void InitGame()
     {
         //Call the SetupScene function of the BoardManager script, pass it current level number.
+        doingSetup = true;
+
+        levelImage = GameObject.Find("LevelImage");
+        levelText = GameObject.Find("LevelText").GetComponent<Text>();
+        levelText.text = "Day " + level;
+        levelImage.SetActive(true);
+        Invoke("HideLevelImage", levelStartDelay);
+
+
         enemies.Clear();
         boardScript.SetupScene(level);
 
     }
 
+    private void HideLevelImage()
+    {
+        levelImage.SetActive(false);
+        doingSetup = false;
+    }
+
     public void GameOver()
     {
+        levelText.text = "After " + level + " days, you starved.";
+        levelImage.SetActive(true);
         enabled = false;
     }
 
     //Update is called every frame.
     void Update()
     {
-        if (playersTurn || enemiesMoving)
+        if (playersTurn || enemiesMoving || doingSetup)
             return;
         StartCoroutine(MoveEnemies());
     }
